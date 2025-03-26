@@ -27,3 +27,24 @@ def bubble_sort(arr: list[int]) -> list[int]:
     return arr
 
 print(bubble_sort([7, 12, 9, 11, 3]))
+
+
+# We can optimize bubble sort algorithm, when the array is nearly sorted
+def optimized_bubble_sort(arr):
+
+    n = len(arr)
+
+    for i in range(n - 1):
+        swapped = False
+
+        for j in range(n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+
+        if not swapped: # When the data is sorted, swapping is not happeded
+            break
+
+    return arr
+
+print(bubble_sort([3, 7, 9, 11, 12]))
