@@ -136,6 +136,50 @@ class SinglyLinkedList:
         # Case 5: If position is valid and greater than zero
         current.next = current.next.next
 
+    def _contains(self, target):
+        """Check if a value exists in the linked list"""
+
+        current = self.head
+        while current:
+            if current.val == target:
+                return True
+            
+            current = current.next
+
+        return False
+    
+    def __contains__(self, target):
+        return self._contains(target)
+
+    def _size(self):
+        """Calculate the size of the linked list"""
+
+        current = self.head
+        count = 0
+        while current:
+            count = count + 1
+            current = current.next
+
+        return count
+    
+    def __len__(self):
+        return self._size()
+    
+    def reverse(self):
+        """Reverse the linked list"""
+
+        prev = None
+        current = self.head
+        while current:
+            next_node = current.next
+            current.next = prev # Reverse
+            prev = current
+            current = next_node
+
+        self.head = prev
+
+        return self
+
     # Redundant function to display linked list, as I use __str__
     def display(self):
         """Display the linked list"""
@@ -165,7 +209,7 @@ class SinglyLinkedList:
 
         return " -> ".join(result) + " -> None" # "10 -> 20 -> 30" + " -> None"
 
-# Example
+# Example usage
 l = SinglyLinkedList()
 
 # Prepend
@@ -189,5 +233,17 @@ print(l)
 # Delete at position
 l.delete_at_position(5)
 print(l)
+
+# Check if a value exists or not
+if 10 in l:
+    print("Yes")
+else:
+    print("No")
+
+# Find length
+print(f"The length of the linked list:", len(l))
+
+# Reverse
+print("After reversing:", l.reverse())
 
 
