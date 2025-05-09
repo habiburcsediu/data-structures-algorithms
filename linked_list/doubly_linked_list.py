@@ -69,6 +69,57 @@ class DoublyLinkedList:
             self.tail = new_node # Case 5: If inserting after the last node
 
         current.next = new_node
+
+    def delete_by_value(self, val):
+        if not self.head and not self.tail:
+            raise Exception("List is empty. Cannot delete!")
+
+        current = self.head
+
+        if current.val == val:
+            if not current.next:
+                self.head = self.tail =  None
+            else:
+                self.head = current.next
+                current.next.prev = None
+
+            return
+
+        while current and current.val != val:
+            current = current.next
+
+        if not current:
+            raise Exception(f"{val} is not found. Cannot delete!")
+
+        if current.next is None:
+            current.prev.next = None
+            self.tail = current.prev
+        else:
+            current.prev.next = current.next
+            current.next.prev = current.prev
+
+    def display(self, choice = "forward"):
+        if choice == "forward":
+            current = self.head
+            result = []
+
+            while current:
+                result.append(str(current.val))
+                current = current.next
+
+            return "None" if not result else " <-> ".join(result) + " <-> None"
+        
+        elif choice == "backward":
+            current = self.tail
+            result = []
+            while current:
+                result.append(str(current.val))
+                current = current.prev
+            return "None" if not result else " <-> ".join(result) + " <-> None"
+        
+        else:
+            raise Exception("Invalid choice. Use 'forward' or 'backward'")
+
         
     def display(self, choice = "forward"):
         if choice == "forward":
@@ -97,7 +148,7 @@ class DoublyLinkedList:
 l = DoublyLinkedList()
 
 # Display the list
-print(l.display())
+print("List:", l.display())
 
 # Append into the list
 l.append(10)
@@ -110,5 +161,19 @@ l.prepend(400)
 print("After prepending:", l.display())
 
 # Insert at the list
-l.insert(700, 2)
+try:
+    l.insert(700, 10)
+except Exception as obj:
+    print(obj)
 print("After inserting:", l.display())
+
+# Delete by value
+val = 10
+try:
+    l.delete_by_value(val)
+except Exception as obj:
+    print(obj)
+else:
+    print(f"{val} is successfully deleted!")
+finally:
+    print(f"After deleting {val}:", l.display())
