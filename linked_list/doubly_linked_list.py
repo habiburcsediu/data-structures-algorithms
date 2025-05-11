@@ -41,7 +41,7 @@ class DoublyLinkedList:
     def insert(self, val, position):
         # Case 1
         if position < 0:
-            raise Exception("Position is invalid. Should be greater than zero!")
+            raise Exception("Position is invalid. Should be zero or greater than zero!")
         
         # Case 2
         if position == 0:
@@ -71,77 +71,133 @@ class DoublyLinkedList:
         current.next = new_node
 
     def delete_by_value(self, val):
+        # Case 1: If list is empty
         if not self.head and not self.tail:
             raise Exception("List is empty. Cannot delete!")
 
         current = self.head
 
+        # Case 2: If target is found at head node
         if current.val == val:
-            if not current.next:
+            if not current.next: # Case 2.1: If list has only one node
                 self.head = self.tail =  None
-            else:
-                self.head = current.next
+            else: # Case 2.2: If list has more than one node
+                self.head = current.next 
                 current.next.prev = None
 
             return
 
+        # Case 3: Traverse to find the matching node
         while current and current.val != val:
             current = current.next
 
+        # Case 4: If node is not found
         if not current:
             raise Exception(f"{val} is not found. Cannot delete!")
 
-        if current.next is None:
+        if current.next is None: # Case 5: When matching node is the last node
             current.prev.next = None
             self.tail = current.prev
         else:
-            current.prev.next = current.next
+            current.prev.next = current.next # Case 6: When matching node is not the last node
             current.next.prev = current.prev
 
-    def display(self, choice = "forward"):
-        if choice == "forward":
-            current = self.head
-            result = []
+    def delete_at_position(self, position):
+        # Case 1: If position is less than 0
+        if position < 0:
+            raise Exception("Position is invalid. Should be zero or greater than zero!")
+            
+        # Case 2: If position is 0
+        if position == 0:
+            if not self.head and not self.tail: # Case 2.1: List is empty
+                raise Exception("List is empty. Cannot delete!")
+            else:
+                if self.head is self.tail: # Case 2.2: List has one node
+                    self.head = None
+                    self.tail = None
+                    print("After deleting, list is becoming empty!")
+                else: # Case 2.3: List has more than one node
+                    self.head = self.head.next
+                    self.head.prev = None
 
-            while current:
-                result.append(str(current.val))
-                current = current.next
+                return
+            
+        # Traverse to find deleted node
+        current = self.head
+        current_position = 0
+        while current and current_position < position:
+            current = current.next
+            current_position += 1
 
-            return "None" if not result else " <-> ".join(result) + " <-> None"
+        # If current is None, 
+        if not current:
+            raise Exception("Position exceeds list size!")
         
-        elif choice == "backward":
-            current = self.tail
-            result = []
-            while current:
-                result.append(str(current.val))
-                current = current.prev
-            return "None" if not result else " <-> ".join(result) + " <-> None"
-        
+        if current.next is not None: # Not last node
+            current.prev.next = current.next
+            current.next.prev = current.prev
         else:
-            raise Exception("Invalid choice. Use 'forward' or 'backward'")
+            self.tail = current.prev
+            current.prev.next = None
 
-        
+    
+    def _search(self, target):
+        current = self.head
+        while current:
+            if current.val == target:
+                return True
+            current = current.next
+            
+        return False
+
+    def __contains__(self, target):
+        return self._search(target)
+    
+    def _size(self):
+        count = 0
+        current = self.head
+        while current:
+            count += 1
+            current = current.next
+
+        return count
+    
+    def __len__(self):
+        return self._size()
+
     def display(self, choice = "forward"):
-        if choice == "forward":
-            current = self.head
-            result = []
-
-            while current:
-                result.append(str(current.val))
-                current = current.next
-
-            return "None" if not result else " <-> ".join(result) + " <-> None"
-        
-        elif choice == "backward":
-            current = self.tail
-            result = []
-            while current:
-                result.append(str(current.val))
-                current = current.prev
-            return "None" if not result else " <-> ".join(result) + " <-> None"
-        
-        else:
+        if choice not in ("forward", "backward"):
             raise Exception("Invalid choice. Use 'forward' or 'backward'")
+        
+        result = []
+        current = self.head if choice == "forward" else self.tail
+        while current:
+            result.append(str(current.val))
+            current = current.next if choice == "forward" else current.prev
+
+        return "None" if not result else " <-> ".join(result) + " <-> None"
+
+        # if choice == "forward":
+        #     current = self.head
+        #     result = []
+
+        #     while current:
+        #         result.append(str(current.val))
+        #         current = current.next
+
+        #     return "None" if not result else " <-> ".join(result) + " <-> None"
+        
+        # elif choice == "backward":
+        #     current = self.tail
+        #     result = []
+        #     while current:
+        #         result.append(str(current.val))
+        #         current = current.prev
+        #     return "None" if not result else " <-> ".join(result) + " <-> None"
+        
+        # else:
+        #     raise Exception("Invalid choice. Use 'forward' or 'backward'")
+
 
 
 # Example usage
@@ -177,3 +233,27 @@ else:
     print(f"{val} is successfully deleted!")
 finally:
     print(f"After deleting {val}:", l.display())
+
+# Delete at position
+position = 1
+try:
+    l.delete_at_position(position)
+except Exception as obj:
+    print(obj)
+else:
+    print(f"Deleted node at position {position}")
+finally:
+    print(f"After deleting at position {position}:", l.display())
+
+# Contains
+target = 400
+
+if target in l:
+    print(f"{target} is found!")
+else:
+    print(f"{target} is not found!")
+
+# Size
+print("Size of the list:", len(l))
+
+# Reverse
