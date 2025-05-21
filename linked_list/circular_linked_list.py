@@ -104,6 +104,43 @@ class CircularLinkedList:
         current.next = new_node
         return True
     
+    def _size(self):
+        """Calculate the size of the list"""
+
+        if self._is_empty():
+            return 0
+        
+        current = self.head
+        count = 0
+        while True:
+            count += 1
+            current = current.next
+
+            if current == self.head:
+                break
+
+        return count
+
+    def __len__(self):
+        return self._size()
+    
+    def _search(self, target):
+        """Search a node (by value) in the list"""
+
+        current = self.head
+        while True:
+            if current.val == target:
+                return True
+            current = current.next
+
+            if current == self.head:
+                break
+
+        return False
+
+    def __contains__(self, target):
+        return self._search(target)
+
     def display(self):
         """Display the list"""
 
@@ -143,3 +180,12 @@ if result:
 result = cl.at_any_position(2, 700)
 if result:
     cl.display()
+
+# Calculate the size of the list
+print("The size of the list:", len(cl))
+
+# To check whether a node (by value) exists in list
+if 700 in cl:
+    print("Found!")
+else:
+    print("Not found!")
