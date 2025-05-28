@@ -2,6 +2,7 @@ class TrieNode:
     def __init__(self):
         self.children = {} # Dictionary for storing nodes
         self._is_end_of_word = False # Indicates the end of a word
+        self.count_prefix = 0 # Number of words that pass through this node (used for prefix counting)
 
 class Trie:
     def __init__(self):
@@ -15,6 +16,7 @@ class Trie:
             if char not in current.children: # If the char is not already a child, add a new TrieNode
                 current.children[char] = TrieNode()
             current = current.children[char] # Traverse to the next child node
+            current.count_prefix += 1 # Increase the number of words sharing this prefix
         current._is_end_of_word = True # Mark the end of the word
 
     def build_trie(self, words):
@@ -97,6 +99,18 @@ class Trie:
             current = current.children[char]
 
         return True # Return True if all the characters of the given prefix exits
+    
+    def count_prefix(self, prefix):
+        """Return the number of words in the Trie that start with the given prefix"""
+
+        current = self.root
+        for char in prefix:
+            # If a char in the Trie is not found, no words start with this prefix
+            if char not in current.children:
+                return 0
+            current = current.children[char]
+        # Return the count of words that share this prefix
+        return current.count_prefix
 
     def starts_with(self, prefix):
         """Return all words in the Trie that start with the given prefix"""
@@ -135,6 +149,9 @@ print("Contains `application`?", trie.contains("application"))
 
 # Checking if the given prefix exists in the Trie
 print("Has prefix `app`?>", trie.has_prefix("app"))
+
+# Count the number of words that share the same prefix
+print("The number of words that share the prefix `app`:", trie.count_prefix("app"))
 
 # Find all words that start with the given prefix
 print("Words starting with `app`", trie.starts_with("app"))
