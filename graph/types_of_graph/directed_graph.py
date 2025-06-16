@@ -11,8 +11,9 @@ class Graph:
             if v not in self.adj_list:
                 self.adj_list[v] = []
 
-            # Add the edge from u to v (directed graph)
-            self.adj_list[u].append(v)
+            # Add the edge from u to v (directed graph), avoiding duplicates
+            if v not in self.adj_list[u]:
+                self.adj_list[u].append(v)
 
     def get_adj_list(self):
         # Print the adjacency list
@@ -34,8 +35,9 @@ class Graph:
         if v not in self.adj_list:
             self.adj_list[v] = []
 
-        # Add the edge from u to v
-        self.adj_list[u].append(v)
+        # Add the edge from u to v (directed graph), avoiding duplicates
+        if v not in self.adj_list[u]:
+            self.adj_list[u].append(v)
 
     def delete_vertex(self, target):
         # Remove all incoming edges to the target node
