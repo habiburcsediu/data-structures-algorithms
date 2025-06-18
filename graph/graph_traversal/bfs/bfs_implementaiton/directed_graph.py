@@ -3,47 +3,42 @@ class Graph:
         self.edges = edges
         self.adj_list = {}
 
-        # Build the adjacency list from edge list
+        # Build the adjacency list from the list of edges
         for u, v in self.edges:
-            # Initialize adjacency list entries if not already present
+            # If node u or v is not already in the adjacency list, add it with an empty list
             if u not in self.adj_list:
                 self.adj_list[u] = []
             if v not in self.adj_list:
                 self.adj_list[v] = []
 
-            # For undirected graph, add both directions
+            # Since this is an undirected graph, add v to u's list and u to v's list
             if v not in self.adj_list[u]:
                 self.adj_list[u].append(v)
             if u not in self.adj_list[v]:
                 self.adj_list[v].append(u)
 
     def get_adj_list(self):
-        # Print the adjacency list
+        # Print the adjacency list in a readable format
         for node in self.adj_list:
             print(f"{node} -> {self.adj_list[node]}")
-        print("")  # Extra newline for better readability
+        print("")  # Print a blank line for better spacing
 
     def bfs(self, start):
-        result = []         # Stores BFS traversal order
-        visited = set()     # Tracks visited nodes
-        queue = [start]     # Queue for BFS traversal
+        result = []            # List to store the BFS traversal order
+        visited = {start}      # Set to keep track of visited nodes
+        queue = [start]        # Queue to process nodes in BFS order
 
-        # Standard BFS loop
         while queue:
-            u = queue.pop(0)   # Dequeue front node
-            if u in visited:   # Skip if already visited
-                continue
+            u = queue.pop(0)   # Dequeue the next node
+            result.append(u)   # Add it to the result list
 
-            visited.add(u)     # Mark node as visited
-            result.append(u)   # Add node to result
-
-            # Enqueue all unvisited and not-in-queue neighbors
-            for v in self.adj_list.get(u, []):
-                if v not in visited and v not in queue:
+            # Visit all unvisited neighbors of u
+            for v in self.adj_list[u]:
+                if v not in visited:
+                    visited.add(v)
                     queue.append(v)
 
-        return result  # Return BFS traversal order
-
+        return result
 
 # Example usage
 edges = [["A", "B"], ["A", "E"], ["B", "C"], ["B", "E"], ["C", "D"], ["D", "E"]]
