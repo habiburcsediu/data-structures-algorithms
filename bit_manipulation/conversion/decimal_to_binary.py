@@ -25,3 +25,9 @@ def convert_decimal_to_binary(n):
 # Example usage
 n = 13
 print(convert_decimal_to_binary(n))
+
+
+#-------------------- Using Python's Built-in bin() --------------------#
+
+def convert_decimal_to_binary(n):
+    return bin(n)[2:]
